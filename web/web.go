@@ -17,11 +17,7 @@ func userRouter(router *gin.Engine) {
 	{
 		user.GET("", func(c *gin.Context) {
 			requestUser := RequestUsername(c)
-			if requestUser == "admin" {
-				c.JSON(200, controller.UserList(""))
-			} else {
-				c.JSON(200, controller.UserList(requestUser))
-			}
+			c.JSON(200, controller.UserList(requestUser))
 		})
 		user.GET("/page", func(c *gin.Context) {
 			curPageStr := c.DefaultQuery("curPage", "1")
@@ -161,7 +157,7 @@ func Start(host string, port int, isSSL bool) {
 	controller.CollectTask()
 	util.OpenPort(port)
 	if isSSL {
-		config := core.Load("")
+		config := core.GetConfig()
 		ssl := &config.SSl
 		router.RunTLS(fmt.Sprintf("%s:%d", host, port), ssl.Cert, ssl.Key)
 	} else {
